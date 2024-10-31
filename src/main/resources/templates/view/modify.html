@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+    <title th:text="${category.isEdit ? 'Edit Category' : 'Add Category'}"></title>
+</head>
+<body layout:decorate="~{layout}">
+<div layout:fragment="content">
+    <h2 th:text="${category.isEdit ? 'Edit Category' : 'Add Category'}"></h2>
+
+    <form th:action="@{/categories/save}" th:object="${category}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{categoryId}"/>
+
+        <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" th:field="*{categoryName}" required/>
+            <p th:if="${#fields.hasErrors('categoryName')}" th:errors="*{categoryName}"></p>
+        </div>
+
+        <div>
+            <label for="image">Image:</label>
+            <input type="file" id="image" name="image"/>
+            <div th:if="${category.images}">
+                <p>Current Image:</p>
+                <img th:src="@{'/images/' + ${category.images}}" alt="Image" width="100"/>
+            </div>
+        </div>
+
+        <div>
+            <label for="status">Status:</label>
+            <select th:field="*{status}">
+                <option value="1" th:text="'Active'" th:selected="${category.status == 1}">Active</option>
+                <option value="0" th:text="'Inactive'" th:selected="${category.status == 0}">Inactive</option>
+            </select>
+        </div>
+
+        <div>
+            <button type="submit" th:text="${category.isEdit ? 'Update' : 'Save'}"></button>
+            <a th:href="@{/categories}">Cancel</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>
